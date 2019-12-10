@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C199BE8B237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = C199BE89237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.m */; };
+		C199BE8C237ABBBB003DBFF7 /* JHWKCookieWebview.m in Sources */ = {isa = PBXBuildFile; fileRef = C199BE8A237ABBBB003DBFF7 /* JHWKCookieWebview.m */; };
+		C199BE8F237ABFC0003DBFF7 /* JHWebController.m in Sources */ = {isa = PBXBuildFile; fileRef = C199BE8E237ABFC0003DBFF7 /* JHWebController.m */; };
+		C199BE92237AC024003DBFF7 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C199BE91237AC024003DBFF7 /* WebKit.framework */; };
 		C1D3AD68236C0FAC00C82B91 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D3AD67236C0FAC00C82B91 /* AppDelegate.m */; };
 		C1D3AD6B236C0FAC00C82B91 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D3AD6A236C0FAC00C82B91 /* SceneDelegate.m */; };
 		C1D3AD6E236C0FAC00C82B91 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C1D3AD6D236C0FAC00C82B91 /* ViewController.m */; };
@@ -26,6 +30,13 @@
 
 /* Begin PBXFileReference section */
 		C199BE8523756DD1003DBFF7 /* JHDelayBlock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHDelayBlock.h; sourceTree = "<group>"; };
+		C199BE87237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "JHWKCookieWebview+CookiesHandle.h"; sourceTree = "<group>"; };
+		C199BE88237ABBBB003DBFF7 /* JHWKCookieWebview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHWKCookieWebview.h; sourceTree = "<group>"; };
+		C199BE89237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "JHWKCookieWebview+CookiesHandle.m"; sourceTree = "<group>"; };
+		C199BE8A237ABBBB003DBFF7 /* JHWKCookieWebview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHWKCookieWebview.m; sourceTree = "<group>"; };
+		C199BE8D237ABFC0003DBFF7 /* JHWebController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHWebController.h; sourceTree = "<group>"; };
+		C199BE8E237ABFC0003DBFF7 /* JHWebController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHWebController.m; sourceTree = "<group>"; };
+		C199BE91237AC024003DBFF7 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		C1D3AD63236C0FAC00C82B91 /* SimpleComponentsDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SimpleComponentsDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		C1D3AD66236C0FAC00C82B91 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		C1D3AD67236C0FAC00C82B91 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -60,6 +71,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C199BE92237AC024003DBFF7 /* WebKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -75,11 +87,34 @@
 			path = ../../JHDelayBlock;
 			sourceTree = "<group>";
 		};
+		C199BE86237ABBBB003DBFF7 /* JHCookieWebview */ = {
+			isa = PBXGroup;
+			children = (
+				C199BE8D237ABFC0003DBFF7 /* JHWebController.h */,
+				C199BE8E237ABFC0003DBFF7 /* JHWebController.m */,
+				C199BE87237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.h */,
+				C199BE89237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.m */,
+				C199BE88237ABBBB003DBFF7 /* JHWKCookieWebview.h */,
+				C199BE8A237ABBBB003DBFF7 /* JHWKCookieWebview.m */,
+			);
+			name = JHCookieWebview;
+			path = ../../JHCookieWebview;
+			sourceTree = "<group>";
+		};
+		C199BE90237AC024003DBFF7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C199BE91237AC024003DBFF7 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		C1D3AD5A236C0FAC00C82B91 = {
 			isa = PBXGroup;
 			children = (
 				C1D3AD65236C0FAC00C82B91 /* SimpleComponentsDemo */,
 				C1D3AD64236C0FAC00C82B91 /* Products */,
+				C199BE90237AC024003DBFF7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -94,6 +129,7 @@
 		C1D3AD65236C0FAC00C82B91 /* SimpleComponentsDemo */ = {
 			isa = PBXGroup;
 			children = (
+				C199BE86237ABBBB003DBFF7 /* JHCookieWebview */,
 				C199BE8423756DD1003DBFF7 /* JHDelayBlock */,
 				C1D3AD98236C27A700C82B91 /* google.png */,
 				C1D3AD9A236C39C900C82B91 /* JHHttpRequest */,
@@ -215,10 +251,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				C1D3AD6E236C0FAC00C82B91 /* ViewController.m in Sources */,
+				C199BE8B237ABBBB003DBFF7 /* JHWKCookieWebview+CookiesHandle.m in Sources */,
 				C1D3ADAC236C3A4F00C82B91 /* JHHttpResult.m in Sources */,
 				C1D3ADAB236C3A4F00C82B91 /* JHHttpRequest.m in Sources */,
 				C1D3AD97236C12DD00C82B91 /* JHWebImageView.m in Sources */,
 				C1D3AD68236C0FAC00C82B91 /* AppDelegate.m in Sources */,
+				C199BE8F237ABFC0003DBFF7 /* JHWebController.m in Sources */,
+				C199BE8C237ABBBB003DBFF7 /* JHWKCookieWebview.m in Sources */,
 				C1D3AD79236C0FAE00C82B91 /* main.m in Sources */,
 				C1D3AD6B236C0FAC00C82B91 /* SceneDelegate.m in Sources */,
 				C1D3AD96236C12DD00C82B91 /* JHImageHelper.m in Sources */,

@@ -11,6 +11,7 @@
 #import "JHWebImageView.h"
 #import "JHAsyncHttp.h"
 #import "JHDelayBlock.h"
+#import "JHWebController.h"
 
 @interface ViewController ()
 
@@ -24,6 +25,7 @@
     [self testImageView];
     [self testHTTP];
     [self testDelayBlock];
+    [self testWebcontroller];
 }
 
 - (void)testImageView {
@@ -79,7 +81,7 @@
 
 - (void)testDelayBlock {
     CGSize screenSize = [UIScreen mainScreen].bounds.size;
-    UIView *testBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 460, screenSize.width, 150)];
+    UIView *testBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 455, screenSize.width, 150)];
     [testBgView setBackgroundColor:[UIColor lightGrayColor]];
     [self.view addSubview:testBgView];
     
@@ -98,5 +100,28 @@
     });
 }
 
+- (void)testWebcontroller {
+    CGSize screenSize = [UIScreen mainScreen].bounds.size;
+    UIView *testBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 620, screenSize.width, 150)];
+    [testBgView setBackgroundColor:[UIColor lightGrayColor]];
+    [self.view addSubview:testBgView];
+    
+    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(30, 30, 150, 25)];
+    [title setTextColor:[UIColor whiteColor]];
+    [title setText:@"4、浏览器测试"];
+    [testBgView addSubview:title];
+    
+    UIButton *button = [[UIButton alloc] initWithFrame:CGRectMake(50, 90, 200, 50)];
+    [button setTitle:@"www.baidu.com" forState:UIControlStateNormal];
+    [button setTitleColor:[UIColor blueColor] forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(openWebcontroller) forControlEvents:UIControlEventTouchUpInside];
+    [testBgView addSubview:button];
+}
+
+- (void)openWebcontroller {
+    UINavigationController *navController = [[UINavigationController alloc] initWithRootViewController:[JHWebController createJHWebController:@"https:www.baidu.com"]];
+    [navController setModalPresentationStyle:UIModalPresentationFullScreen];
+    [self presentViewController:navController animated:YES completion:nil];
+}
 
 @end
