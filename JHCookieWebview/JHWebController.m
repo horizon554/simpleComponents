@@ -155,7 +155,6 @@
     [[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeLeft relatedBy:NSLayoutRelationEqual toItem:_progressView attribute:NSLayoutAttributeLeft multiplier:1.0 constant:0] setActive:YES];
     [[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeRight relatedBy:NSLayoutRelationEqual toItem:_progressView attribute:NSLayoutAttributeRight multiplier:1.0 constant:0] setActive:YES];
     [[NSLayoutConstraint constraintWithItem:self.view attribute:NSLayoutAttributeTop relatedBy:NSLayoutRelationEqual toItem:_progressView attribute:NSLayoutAttributeTop multiplier:1.0 constant:0] setActive:YES];
-    [[NSLayoutConstraint constraintWithItem:_progressView attribute:NSLayoutAttributeHeight relatedBy:NSLayoutRelationEqual toItem:_progressView attribute:NSLayoutAttributeHeight multiplier:1.0 constant:3.0] setActive:YES];
 
     
     [self updateProgress:0.1 animate:NO];
