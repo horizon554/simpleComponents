@@ -16,27 +16,29 @@
     
     // 初始化参数变量
    __block NSString *str = @"?";
+    if ([url containsString:@"?"]) {
+        str = @"&";
+    }
     
     // 快速遍历参数数组
     [params enumerateKeysAndObjectsUsingBlock:^(id  _Nonnull key, id  _Nonnull obj, BOOL * _Nonnull stop) {
         NSString *strObj = @"";
         if ([obj isKindOfClass:[NSNumber class]]) {
             strObj = [NSString stringWithFormat:@"%@",(NSNumber *)obj];
-        }else {
-            strObj = obj;
-        }
-        
-        if ([obj isKindOfClass:[NSDictionary class]]){
+        }else if ([obj isKindOfClass:[NSDictionary class]]){
             strObj = [self paramStringForDic:(NSDictionary *)obj];
             if (strObj && strObj.length > 0) {
                 str = [str stringByAppendingString:strObj];
                 str = [str stringByAppendingString:@"&"];
             }
         }else {
-            str = [str stringByAppendingString:key];
-            str = [str stringByAppendingString:@"="];
-            str = [str stringByAppendingString:[self URLEncodedString:strObj]];
-            str = [str stringByAppendingString:@"&"];
+            if (![str containsString:key] && ![url containsString:key]) {
+                strObj = obj;
+                str = [str stringByAppendingString:key];
+                str = [str stringByAppendingString:@"="];
+                str = [str stringByAppendingString:[self URLEncodedString:strObj]];
+                str = [str stringByAppendingString:@"&"];
+            }
         }
     }];
 

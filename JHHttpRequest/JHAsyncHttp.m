@@ -16,6 +16,7 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
 @interface JHAsyncHttp ()
 
 @property (nonatomic,copy) CallBackBlock callBackBlock;
+@property (nonatomic,copy) CallBackBlock failedCallback;
 @property (nonatomic) NSURLSessionTask *task;
 @property (nonatomic) JHAsyncHttp *httpSelf;
 
@@ -40,25 +41,29 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
 }
 
 // GET
-+ (JHAsyncHttp *)httpGet:(NSString *)urlStr params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock{
++ (JHAsyncHttp *)httpGet:(NSString *)urlStr requestParams:(NSDictionary *)requestParams params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock failedCallback:(CallBackBlock)failedCallback{
     NSString *realUrl = [self getRealUrl:urlStr];
     __block JHAsyncHttp *http = [[JHAsyncHttp alloc] init];
     http.callBackBlock = callBackBlock;
+    http.failedCallback = failedCallback;
     http.httpSelf = http;
     realUrl = [JHHttpRequest connectUrl:realUrl params:params];
     NSURL *url = [NSURL URLWithString:realUrl];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
     [request setHTTPMethod:@"GET"];
-    [request setTimeoutInterval:15];
+    
+    if ([requestParams objectForKey:JH_TIMEOUTKEY]) {
+        NSNumber *timeOut = [params objectForKey:JH_TIMEOUTKEY];
+        [request setTimeoutInterval:[timeOut doubleValue]];
+    }else {
+        [request setTimeoutInterval:15];
+    }
 //    [request setValue:@"application/json, text/plain, */*" forHTTPHeaderField:@"Accept"];
     
     __weak typeof (http) weakHttp = http;
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         __strong typeof (http) strongHttp = weakHttp;
-        if (!strongHttp.callBackBlock) {
-            return;
-        }
         
         JHHttpResult *result = [[JHHttpResult alloc] init];
         [result setData:data];
@@ -66,9 +71,18 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
         [result setError:error];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (strongHttp.callBackBlock) {
-                strongHttp.callBackBlock(result);
+            if (!error && [(NSHTTPURLResponse *)response statusCode] == 200) {
+                // success
+                if (strongHttp.callBackBlock) {
+                    strongHttp.callBackBlock(result);
+                }
+            }else {
+                // fail
+                if (strongHttp.failedCallback) {
+                    strongHttp.failedCallback(result);
+                }
             }
+
             strongHttp.httpSelf = nil;
         });
         
@@ -81,11 +95,12 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
 }
 
 // POST
-+ (JHAsyncHttp *)httpPost:(NSString *)urlStr params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock{
++ (JHAsyncHttp *)httpPost:(NSString *)urlStr requestParams:(NSDictionary *)requestParams params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock failedCallback:(CallBackBlock)failedCallback{
     NSString *realUrl = [self getRealUrl:urlStr];
 
     JHAsyncHttp *http = [[JHAsyncHttp alloc] init];
     http.callBackBlock = callBackBlock;
+    http.failedCallback = failedCallback;
     http.httpSelf = http;
     NSURL *url = [NSURL URLWithString:realUrl];
     NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:url];
@@ -95,18 +110,17 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
     [request setValue:@"application/json;charset=utf-8" forHTTPHeaderField:@"Content-Type"];
     
     // 参数
-    if ([params objectForKey:JH_HTTPBODYKEY]) {
-        NSString *paramsStr = [self jsonString:[params objectForKey:JH_HTTPBODYKEY]];
-
+    if (params && params.count > 0) {
+        NSString *paramsStr = [self jsonString:params];
         [request setHTTPBody:[paramsStr dataUsingEncoding:NSUTF8StringEncoding]];
     }
     
-    if ([params objectForKey:JH_TIMEOUTKEY]) {
+    if ([requestParams objectForKey:JH_TIMEOUTKEY]) {
         NSNumber *timeOut = [params objectForKey:JH_TIMEOUTKEY];
         [request setTimeoutInterval:[timeOut doubleValue]];
     }
     
-    if ([params objectForKey:JH_DATAFORMAT] && [[params objectForKey:JH_DATAFORMAT] isEqualToString:@"form"]) {
+    if ([requestParams objectForKey:JH_DATAFORMAT] && [[params objectForKey:JH_DATAFORMAT] isEqualToString:@"form"]) {
         [request setValue:@"application/x-www-form-urlencoded;charset=utf-8" forHTTPHeaderField:@"Content-Type"];
         NSString *paramsStr = [JHHttpRequest postStringWithParams:[params objectForKey:JH_HTTPBODYKEY]];
         [request setHTTPBody:[paramsStr dataUsingEncoding:NSUTF8StringEncoding]];
@@ -116,9 +130,6 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
     NSURLSession *session = [NSURLSession sharedSession];
     NSURLSessionDataTask *dataTask = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
         __strong typeof (http) strongHttp = weakHttp;
-        if (!strongHttp.callBackBlock) {
-            return;
-        }
         
         JHHttpResult *result = [[JHHttpResult alloc] init];
         [result setData:data];
@@ -126,8 +137,16 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
         [result setError:error];
         
         dispatch_async(dispatch_get_main_queue(), ^{
-            if (strongHttp.callBackBlock) {
-                strongHttp.callBackBlock(result);
+            if (!error && [(NSHTTPURLResponse *)response statusCode] == 200) {
+                // success
+                if (strongHttp.callBackBlock) {
+                    strongHttp.callBackBlock(result);
+                }
+            }else {
+                // fail
+                if (strongHttp.failedCallback) {
+                    strongHttp.failedCallback(result);
+                }
             }
             strongHttp.httpSelf = nil;
         });
@@ -140,7 +159,7 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
     return http;
 }
 
-+ (void)httpGetAll:(NSArray *)urlStrArr params:(NSArray *)paramsDicArr callback:(GetAllCallBack)callback{
++ (void)httpGetAll:(NSArray *)urlStrArr requestParamsArr:(NSArray *)requestParamsArr params:(NSArray *)paramsDicArr callback:(GetAllCallBack)callback{
     if (!urlStrArr || urlStrArr.count <= 0) {
         if (callback) {
             callback(nil,NO);
@@ -157,28 +176,16 @@ NSString *const JH_DATAFORMAT = @"JH_DATAFORMAT";
     dispatch_group_t downloadGroup = dispatch_group_create();
     
     [urlStrArr enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        NSDictionary *requestParams = [requestParamsArr objectAtIndex:idx];
         NSDictionary *params = [paramsDicArr objectAtIndex:idx];
         dispatch_group_enter(downloadGroup);
-        [JHAsyncHttp httpGet:obj params:params callBack:^(JHHttpResult *result) {
-            if (result.error) {
-                // 失败
-                dispatch_group_leave(downloadGroup);
-                return;
-            }
-            
-            if (!result.data) {
-                dispatch_group_leave(downloadGroup);
-                return;
-            }
-            
-            NSDictionary *dataDic = [self dictionaryFromJsonData:result.data];
-            if ([dataDic objectForKey:@"code"] && [[dataDic objectForKey:@"code"] intValue] != 200) {
-                dispatch_group_leave(downloadGroup);
-                return;
-            }
-            
+        [JHAsyncHttp httpGet:obj requestParams:requestParams params:params callBack:^(JHHttpResult *result) {
             // success
-            [resultDataArr replaceObjectAtIndex:idx withObject:dataDic];
+            NSDictionary *dataDic = result.resultDic;
+            [resultDataArr replaceObjectAtIndex:idx withObject:dataDic?:@{}];
+            dispatch_group_leave(downloadGroup);
+        } failedCallback:^(JHHttpResult *result) {
+            // 失败
             dispatch_group_leave(downloadGroup);
         }];
     }];

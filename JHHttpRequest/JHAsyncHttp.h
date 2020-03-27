@@ -22,20 +22,21 @@ typedef void(^GetAllCallBack)(NSArray *resultArr,BOOL successAll);
 - (void)stopTask;
 + (NSString *)getRealUrl:(NSString *)url;
 // GET
-+ (JHAsyncHttp *)httpGet:(NSString *)urlStr params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock;
++ (JHAsyncHttp *)httpGet:(NSString *)urlStr requestParams:(NSDictionary *)requestParams params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock failedCallback:(CallBackBlock)failedCallback;
 
 /**
  多个get请求并发，同时返回
 
  @param urlStrArr URL数组
+ @param requestParamsArr 请求参数数组
  @param paramsDicArr 参数数组
  @param callback 回掉
  */
-+ (void)httpGetAll:(NSArray *)urlStrArr params:(NSArray *)paramsDicArr callback:(GetAllCallBack)callback;
++ (void)httpGetAll:(NSArray *)urlStrArr requestParamsArr:(NSArray *)requestParamsArr params:(NSArray *)paramsDicArr callback:(GetAllCallBack)callback;
 
 
 // POST
-+ (JHAsyncHttp *)httpPost:(NSString *)urlStr params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock;
++ (JHAsyncHttp *)httpPost:(NSString *)urlStr requestParams:(NSDictionary *)requestParams params:(NSDictionary *)params callBack:(CallBackBlock)callBackBlock failedCallback:(CallBackBlock)failedCallback;
 
 #pragma mark - tool
 + (NSDictionary *)dictionaryFromJsonData:(NSData *)data;

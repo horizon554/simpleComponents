@@ -66,6 +66,13 @@
 
 - (void)requestWithCookieHandle:(NSURLRequest *)request success:(void(^)(NSURLRequest *newRequest,NSHTTPURLResponse *response,NSData *data,NSURLSession *session))successBlock fail:(void(^)(NSURLSession *session))failBlock{
     NSURLSessionConfiguration *sessionConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
+    if (@available(iOS 9.0, *)) {
+        if (self.customUserAgent && self.customUserAgent.length > 0) {
+            sessionConfig.HTTPAdditionalHeaders = @{@"User-Agent": self.customUserAgent};
+        }
+    } else {
+        
+    }
     // delegate 强引用 需要手动释放
     NSURLSession *session = [NSURLSession sessionWithConfiguration:sessionConfig delegate:self delegateQueue:nil];
     NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {

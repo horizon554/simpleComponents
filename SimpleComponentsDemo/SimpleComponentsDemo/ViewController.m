@@ -68,14 +68,13 @@
     [textView setBackgroundColor:[UIColor whiteColor]];
     [testBgView addSubview:textView];
     
-    [JHAsyncHttp httpGet:@"http://ip.taobao.com/service/getIpInfo.php" params:@{@"ip":@"192.168.1.1"} callBack:^(JHHttpResult *result) {
+    [JHAsyncHttp httpGet:@"http://ip-api.com/json" requestParams:nil params:nil callBack:^(JHHttpResult *result) {
+        [textView setText:[NSString stringWithFormat:@"请求成功：%@",result.resultDic]];
+    } failedCallback:^(JHHttpResult *result) {
         if (result.error) {
             [textView setText:[NSString stringWithFormat:@"请求错误：%@",result.error.localizedDescription]];
             return ;
         }
-        
-        NSDictionary *dataDic = [JHAsyncHttp dictionaryFromJsonData:result.data];
-        [textView setText:[NSString stringWithFormat:@"请求成功：%@",dataDic]];
     }];
 }
 
